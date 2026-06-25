@@ -6,10 +6,12 @@
 #include "parse_line.hpp"
 #include "vector.hpp"
 
-int main(int argc, char* argv[]) {
-    if (argc > 3) {
-      std::cerr << "Invalid arguments." << std::endl;
-      return 0;
+int main(int argc, char* argv[])
+{
+    if (argc > 3)
+    {
+        std::cerr << "Invalid arguments." << std::endl;
+        return 0;
     }
 
     std::string inputFileName;
@@ -17,47 +19,58 @@ int main(int argc, char* argv[]) {
     bool hasInputFile = false;
     bool hasOutputFile = false;
 
-    for (int i = 1; i < argc; ++i) {
+    for (int i = 1; i < argc; ++i)
+    {
         std::string arg = argv[i];
-        if (arg.rfind("in:", 0) == 0 && !hasInputFile) {
+
+        if (arg.rfind("in:", 0) == 0 && !hasInputFile)
+        {
             inputFileName = arg.substr(3);
             hasInputFile = true;
-        } else if (arg.rfind("out:", 0) == 0 && !hasOutputFile) {
+        }
+        else if (arg.rfind("out:", 0) == 0 && !hasOutputFile)
+        {
             outputFileName = arg.substr(4);
             hasOutputFile = true;
-        } else {
+        }
+        else
+        {
             std::cerr << "Invalid arguments." << std::endl;
             return 0;
         }
     }
 
     smirnova::InputHandler inputHandler(inputFileName);
+
     smirnova::Vector<smirnova::Person> persons;
     size_t validEntries = 0;
     size_t ignoredEntries = 0;
 
-    smirnova::processInput(inputHandler.getInputStream(), persons, validEntries, ignoredEntries);
+    smirnova::processInput(
+        inputHandler.getInputStream(),
+        persons,
+        validEntries,
+        ignoredEntries
+    );
 
-    if (validEntries == 0 && ignoredEntries == 0)
+    if (hasOutputFile)
     {
-        std::cout << '\n';
-        std::cerr << "0 0\n";
-        return 0;
-    }
-
-    if (hasOutputFile) {
         std::ofstream output(outputFileName.c_str());
 
-        if (!output) {
+        if (!output)
+        {
             std::cerr << "Failed to open output file." << std::endl;
             return 2;
         }
 
         smirnova::printPersons(persons, output);
-    } else {
+    }
+    else
+    {
         smirnova::printPersons(persons, std::cout);
 
-        if (validEntries != 0 || ignoredEntries != 0) {
+        if (validEntries != 0 || ignoredEntries != 0)
+        {
             std::cerr << validEntries << " " << ignoredEntries << std::endl;
         }
     }
