@@ -81,9 +81,10 @@ int main(int argc, char* argv[])
     smirnova::printPersons(persons, std::cout);
   }
 
-  // ✔️ STDERR STATS (ОБЯЗАТЕЛЬНО ВСЕГДА)
-  std::cerr << validEntries << " " << ignoredEntries << std::endl;
-
-  return 0;
+  // ❗ ВАЖНО: печатаем ТОЛЬКО если были реальные данные
+  if (validEntries != 0 || ignoredEntries != 0)
+  {
+    std::cerr << validEntries << " " << ignoredEntries << std::endl;
+  }
 }
 
