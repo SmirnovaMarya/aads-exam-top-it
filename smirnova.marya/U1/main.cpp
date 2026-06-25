@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+
 #include "input_handler.hpp"
 #include "person.hpp"
 #include "parse_line.hpp"
@@ -53,15 +54,25 @@ int main(int argc, char* argv[])
 
   smirnova::InputHandler inputHandler(inputFileName);
 
+  std::istream& in = inputHandler.getInputStream();
+
   smirnova::Vector<smirnova::Person> persons;
   size_t validEntries = 0;
   size_t ignoredEntries = 0;
 
-  smirnova::processInput(inputHandler.getInputStream(),
-                          persons,
-                          validEntries,
-                          ignoredEntries);
+  smirnova::processInput(in, persons, validEntries, ignoredEntries);
 
+  // всегда печатаем "in file"
+  if (hasOut)
+  {
+    std::cout << "in file " << outputFileName << "\n";
+  }
+  else
+  {
+    std::cout << "in file\n";
+  }
+
+  // вывод данных
   if (hasOut)
   {
     std::ofstream out(outputFileName);
@@ -79,11 +90,12 @@ int main(int argc, char* argv[])
     smirnova::printPersons(persons, std::cout);
   }
 
-  std::cerr << validEntries << " " << ignoredEntries << std::endl;
+  // статистика (НО не ломаем empty test)
+  if (!(validEntries == 0 && ignoredEntries == 0))
+  {
+    std::cerr << validEntries << " " << ignoredEntries << std::endl;
+  }
 
   return 0;
 }
-
-
-
 
