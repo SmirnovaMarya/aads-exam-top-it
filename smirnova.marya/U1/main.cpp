@@ -10,8 +10,8 @@ int main(int argc, char* argv[])
 {
     if (argc > 3)
     {
-        std::cerr << "Invalid arguments." << std::endl;
-        return 0;
+      std::cerr << "Invalid arguments." << std::endl;
+      return 0;
     }
 
     std::string inputFileName;
@@ -21,23 +21,23 @@ int main(int argc, char* argv[])
 
     for (int i = 1; i < argc; ++i)
     {
-        std::string arg = argv[i];
+      std::string arg = argv[i];
 
-        if (arg.rfind("in:", 0) == 0 && !hasInputFile)
-        {
-            inputFileName = arg.substr(3);
-            hasInputFile = true;
-        }
-        else if (arg.rfind("out:", 0) == 0 && !hasOutputFile)
-        {
-            outputFileName = arg.substr(4);
-            hasOutputFile = true;
-        }
-        else
-        {
-            std::cerr << "Invalid arguments." << std::endl;
-            return 0;
-        }
+      if (arg.rfind("in:", 0) == 0 && !hasInputFile)
+      {
+        inputFileName = arg.substr(3);
+        hasInputFile = true;
+      }
+      else if (arg.rfind("out:", 0) == 0 && !hasOutputFile)
+      {
+        outputFileName = arg.substr(4);
+        hasOutputFile = true;
+      }
+      else
+      {
+        std::cerr << "Invalid arguments." << std::endl;
+        return 0;
+      }
     }
 
     smirnova::InputHandler inputHandler(inputFileName);
@@ -55,29 +55,29 @@ int main(int argc, char* argv[])
 
     if (hasOutputFile)
     {
-        std::ofstream output(outputFileName.c_str());
+      std::ofstream output(outputFileName.c_str());
 
-        if (!output)
-        {
-            std::cerr << "Failed to open output file." << std::endl;
-            return 2;
-        }
+      if (!output)
+      {
+        std::cerr << "Failed to open output file." << std::endl;
+        return 2;
+      }
 
-        smirnova::printPersons(persons, output);
+      smirnova::printPersons(persons, output);
     }
     else
     {
-        smirnova::printPersons(persons, std::cout);
+      smirnova::printPersons(persons, std::cout);
     }
 
     if (validEntries != 0 || ignoredEntries != 0)
     {
-        std::cerr << validEntries << " " << ignoredEntries << std::endl;
+      std::cerr << validEntries << " " << ignoredEntries << std::endl;
     }
     else
     {
-        std::cout << '\n';
-        std::cerr << "0 0\n";
+      std::cout << '\n';
+      std::cerr << "0 0\n";
     }
 
     return 0;
