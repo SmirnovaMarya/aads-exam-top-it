@@ -16,7 +16,9 @@ int main(int argc, char* argv[])
 
   std::string inputFileName;
   std::string outputFileName;
-  bool hasOutputFile = false;
+
+  bool hasIn = false;
+  bool hasOut = false;
 
   for (int i = 1; i < argc; ++i)
   {
@@ -24,12 +26,23 @@ int main(int argc, char* argv[])
 
     if (arg.rfind("in:", 0) == 0)
     {
+      if (hasIn)
+      {
+        std::cerr << "Invalid arguments." << std::endl;
+        return 1;
+      }
       inputFileName = arg.substr(3);
+      hasIn = true;
     }
     else if (arg.rfind("out:", 0) == 0)
     {
+      if (hasOut)
+      {
+        std::cerr << "Invalid arguments." << std::endl;
+        return 1;
+      }
       outputFileName = arg.substr(4);
-      hasOutputFile = true;
+      hasOut = true;
     }
     else
     {
@@ -49,33 +62,28 @@ int main(int argc, char* argv[])
                           validEntries,
                           ignoredEntries);
 
-  if (hasOutputFile)
+  if (hasOut)
   {
-    std::cout << "in file " << outputFileName << "\n";
-  }
-  else
-  {
-    std::cout << "in file\n";
-  }
+    std::ofstream out(outputFileName);
 
-  if (hasOutputFile)
-  {
-    std::ofstream output(outputFileName);
-
-    if (!output)
+    if (!out)
     {
       std::cerr << "Failed to open output file." << std::endl;
       return 2;
     }
 
-    smirnova::printPersons(persons, output);
+    smirnova::printPersons(persons, out);
   }
   else
   {
     smirnova::printPersons(persons, std::cout);
   }
 
+  std::cerr << validEntries << " " << ignoredEntries << std::endl;
+
   return 0;
 }
+
+
 
 
