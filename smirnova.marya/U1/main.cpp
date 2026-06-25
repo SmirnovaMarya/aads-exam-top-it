@@ -53,22 +53,18 @@ int main(int argc, char* argv[])
     }
     else
     {
-        smirnova::printPersons(persons, std::cout);
-        if (validEntries != 0 || ignoredEntries != 0)
-        {
-          std::cerr << validEntries << " " << ignoredEntries << std::endl;
-        }
-    }
-    if (validEntries != 0 || ignoredEntries != 0)
-    {
+      smirnova::printPersons(persons, std::cout);
+      
+      if (validEntries != 0 || ignoredEntries != 0)
+      {
         std::cerr << validEntries << " " << ignoredEntries << std::endl;
-    }
-    else
-    {
+      }
+      else
+      {
         std::cout << '\n';
         std::cerr << "0 0\n";
+      }
     }
-
     return 0;
 }
 
