@@ -64,7 +64,6 @@ namespace smirnova
     }
   }
 
-  // ===== copy assignment =====
   template< typename T >
   Vector< T >& Vector< T >::operator=(const Vector& other)
   {
@@ -94,14 +93,12 @@ namespace smirnova
     return *this;
   }
 
-  // ===== destructor =====
   template< typename T >
   Vector< T >::~Vector()
   {
     delete[] data_;
   }
 
-  // ===== push_back =====
   template< typename T >
   void Vector< T >::push_back(const T& value)
   {
@@ -114,7 +111,6 @@ namespace smirnova
     ++size_;
   }
 
-  // ===== operator[] =====
   template< typename T >
   T& Vector< T >::operator[](size_t index)
   {
@@ -127,14 +123,12 @@ namespace smirnova
     return data_[index];
   }
 
-  // ===== size =====
   template< typename T >
   size_t Vector< T >::size() const
   {
     return size_;
   }
 
-  // ===== iterators =====
   template< typename T >
   T* Vector< T >::begin()
   {
@@ -159,7 +153,6 @@ namespace smirnova
     return data_ + size_;
   }
 
-  // ===== reserve =====
   template< typename T >
   void Vector< T >::reserve(size_t newCapacity)
   {
@@ -184,3 +177,4 @@ namespace smirnova
 }
 
 #endif
+
