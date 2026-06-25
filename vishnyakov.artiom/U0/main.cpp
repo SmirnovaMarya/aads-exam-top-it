@@ -1,7 +1,8 @@
 #include <iostream>
+#include "credentials.hpp"
 
 int main()
 {
-  std::cout << "vishnyakov.artiom\n";
+  vishnyakov::out_credentials(std::cout) << '\n';
 }
 
