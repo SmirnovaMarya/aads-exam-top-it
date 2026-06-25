@@ -1,9 +1,22 @@
+#include <fstream>
+#include <iostream>
+#include <string>
+
+#include "input_handler.hpp"
+#include "parse_line.hpp"
+#include "person.hpp"
+#include "vector.hpp"
+
 int main(int argc, char* argv[])
 {
+  if (argc > 3)
+  {
+    std::cerr << "Invalid arguments." << std::endl;
+    return 0;
+  }
+
   std::string inputFileName;
   std::string outputFileName;
-
-  bool hasIn = false;
   bool hasOut = false;
 
   for (int i = 1; i < argc; ++i)
@@ -12,70 +25,61 @@ int main(int argc, char* argv[])
 
     if (arg.rfind("in:", 0) == 0)
     {
-      if (hasIn)
-      {
-        std::cerr << "Invalid arguments." << std::endl;
-        return 1;
-      }
       inputFileName = arg.substr(3);
-      hasIn = true;
     }
     else if (arg.rfind("out:", 0) == 0)
     {
       if (hasOut)
       {
         std::cerr << "Invalid arguments." << std::endl;
-        return 1;
+        return 0;
       }
+
       outputFileName = arg.substr(4);
       hasOut = true;
     }
     else
     {
       std::cerr << "Invalid arguments." << std::endl;
-      return 1;
+      return 0;
     }
   }
 
   smirnova::InputHandler inputHandler(inputFileName);
-
-  smirnova::Vector<smirnova::Person> persons;
+  smirnova::Vector< smirnova::Person > persons;
   size_t validEntries = 0;
   size_t ignoredEntries = 0;
 
   smirnova::processInput(inputHandler.getInputStream(),
-                          persons,
-                          validEntries,
-                          ignoredEntries);
+      persons, validEntries, ignoredEntries);
 
-  // ✔ EMPTY INPUT FIX
-  if (persons.size() == 0)
+  if (validEntries == 0 && ignoredEntries == 0)
   {
-    std::cerr << validEntries << " " << ignoredEntries << std::endl;
+    if (!hasOut)
+    {
+      std::cout << '\n';
+    }
     return 0;
   }
 
   if (hasOut)
   {
-    std::ofstream out(outputFileName);
+    std::ofstream output(outputFileName.c_str());
 
-    if (!out)
+    if (!output)
     {
       std::cerr << "Failed to open output file." << std::endl;
       return 2;
     }
 
-    std::cout << "in file " << outputFileName << "\n";
-    smirnova::printPersons(persons, out);
+    output << "in file " << outputFileName << '\n';
+    smirnova::printPersons(persons, output);
   }
   else
   {
-    std::cout << "in file\n";
     smirnova::printPersons(persons, std::cout);
+    std::cerr << validEntries << " " << ignoredEntries << std::endl;
   }
-
-  std::cerr << validEntries << " " << ignoredEntries << std::endl;
 
   return 0;
 }
-
