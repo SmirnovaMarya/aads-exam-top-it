@@ -9,10 +9,11 @@
 
 int main(int argc, char* argv[])
 {
+  // максимум 2 аргумента + имя программы
   if (argc > 3)
   {
     std::cerr << "Invalid arguments." << std::endl;
-    return 0;
+    return 1;
   }
 
   std::string inputFileName;
@@ -63,13 +64,16 @@ int main(int argc, char* argv[])
                           validEntries,
                           ignoredEntries);
 
-  // ✔️ OUTPUT DATA
-  // ✔️ OUTPUT DATA
+  // ===== ВАЖНО: Empty Input test =====
+  // если вообще ничего не считали — НИЧЕГО НЕ ПЕЧАТАЕМ
   if (persons.size() == 0)
   {
-    std::cout << "\n";
+    std::cerr << validEntries << " " << ignoredEntries << std::endl;
+    return 0;
   }
-  else if (hasOut)
+
+  // ===== output =====
+  if (hasOut)
   {
     std::ofstream out(outputFileName);
 
@@ -79,11 +83,18 @@ int main(int argc, char* argv[])
       return 2;
     }
 
+    std::cout << "in file " << outputFileName << "\n";
     smirnova::printPersons(persons, out);
   }
   else
   {
+    std::cout << "in file\n";
     smirnova::printPersons(persons, std::cout);
   }
+
+  // ===== stats ВСЕГДА =====
+  std::cerr << validEntries << " " << ignoredEntries << std::endl;
+
+  return 0;
 }
 
