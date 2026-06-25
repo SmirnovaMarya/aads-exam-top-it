@@ -6,6 +6,14 @@
 #include "parse_line.hpp"
 #include "vector.hpp"
 
+#include <iostream>
+#include <fstream>
+#include <string>
+#include "input_handler.hpp"
+#include "person.hpp"
+#include "parse_line.hpp"
+#include "vector.hpp"
+
 int main(int argc, char* argv[]) {
     if (argc > 3) {
       std::cerr << "Invalid arguments." << std::endl;
@@ -25,7 +33,7 @@ int main(int argc, char* argv[]) {
         hasOutputFile = true;
       } else {
         std::cerr << "Invalid arguments." << std::endl;
-        return 0;
+        return 1;
       }
     }
 
@@ -44,6 +52,7 @@ int main(int argc, char* argv[]) {
         return 2;
       }
 
+      output << "in file " << outputFileName << '\n';
       smirnova::printPersons(persons, output);
     } else {
       smirnova::printPersons(persons, std::cout);
@@ -55,3 +64,5 @@ int main(int argc, char* argv[]) {
 
     return 0;
 }
+
+
