@@ -1,89 +1,67 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-
 #include "input_handler.hpp"
-#include "parse_line.hpp"
 #include "person.hpp"
+#include "parse_line.hpp"
 #include "vector.hpp"
 
-int main(int argc, char* argv[])
-{
-  if (argc > 3)
-  {
-    std::cerr << "Invalid arguments." << std::endl;
-    return 0;
-  }
-
-  std::string inputFileName;
-  std::string outputFileName;
-
-  bool hasIn = false;
-  bool hasOut = false;
-
-  for (int i = 1; i < argc; ++i)
-  {
-    std::string arg = argv[i];
-
-    if (arg.rfind("in:", 0) == 0)
-    {
-      if (hasIn)
-      {
-        std::cerr << "Invalid arguments." << std::endl;
-        return 1;
-      }
-      inputFileName = arg.substr(3);
-      hasIn = true;
-    }
-    else if (arg.rfind("out:", 0) == 0)
-    {
-      if (hasOut)
-      {
-        std::cerr << "Invalid arguments." << std::endl;
-        return 1;
-      }
-      outputFileName = arg.substr(4);
-      hasOut = true;
-    }
-    else
-    {
+int main(int argc, char* argv[]) {
+    if (argc > 3) {
       std::cerr << "Invalid arguments." << std::endl;
-      return 1;
+      return 0;
     }
-  }
 
-  smirnova::InputHandler inputHandler(inputFileName);
+    std::string inputFileName;
+    std::string outputFileName;
+    bool hasInputFile = false;
+    bool hasOutputFile = false;
 
-  smirnova::Vector<smirnova::Person> persons;
-  size_t validEntries = 0;
-  size_t ignoredEntries = 0;
+    for (int i = 1; i < argc; ++i) {
+        std::string arg = argv[i];
+        if (arg.rfind("in:", 0) == 0 && !hasInputFile) {
+            inputFileName = arg.substr(3);
+            hasInputFile = true;
+        } else if (arg.rfind("out:", 0) == 0 && !hasOutputFile) {
+            outputFileName = arg.substr(4);
+            hasOutputFile = true;
+        } else {
+            std::cerr << "Invalid arguments." << std::endl;
+            return 0;
+        }
+    }
 
-  smirnova::processInput(
-      inputHandler.getInputStream(),
-      persons,
-      validEntries,
-      ignoredEntries
-  );
+    smirnova::InputHandler inputHandler(inputFileName);
+    smirnova::Vector<smirnova::Person> persons;
+    size_t validEntries = 0;
+    size_t ignoredEntries = 0;
 
-  if (hasOut)
-  {
-    std::ofstream out(outputFileName);
+    smirnova::processInput(inputHandler.getInputStream(), persons, validEntries, ignoredEntries);
 
-    if (!out)
+    if (validEntries == 0 && ignoredEntries == 0)
     {
-      std::cerr << "Failed to open output file." << std::endl;
-      return 2;
+        std::cout << '\n';
+        std::cerr << "0 0\n";
+        return 0;
     }
 
-    smirnova::printPersons(persons, out);
-  }
-  else
-  {
-    smirnova::printPersons(persons, std::cout);
-  }
+    if (hasOutputFile) {
+        std::ofstream output(outputFileName.c_str());
 
-  std::cerr << validEntries << " " << ignoredEntries << "\n";
+        if (!output) {
+            std::cerr << "Failed to open output file." << std::endl;
+            return 2;
+        }
 
-  return 0;
+        smirnova::printPersons(persons, output);
+    } else {
+        smirnova::printPersons(persons, std::cout);
+
+        if (validEntries != 0 || ignoredEntries != 0) {
+            std::cerr << validEntries << " " << ignoredEntries << std::endl;
+        }
+    }
+
+    return 0;
 }
 
